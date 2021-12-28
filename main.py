@@ -132,23 +132,25 @@ ax = figure.add_subplot(2, 2, 1)
 x1_min, x1_max = train_x[:, 0].min() - 0.5, train_x[:, 1].max()+0.5
 x2_min, x2_max = train_x[:, 0].min() - 0.5, train_x[:, 1].max()+0.5
 
-xx1, xx2 = np.mgrid[x1_min:x1_max:50j, x2_min:x2_max:50j]
+xx1, xx2 = np.mgrid[x1_min:x1_max:150j, x2_min:x2_max:150j]
 pred_x = np.column_stack([xx1.reshape(-1), xx2.reshape(-1)])
 pred_y = classifier.predict(pred_x)
 
 ax.scatter(train_x[predicts == 0][:, 0], train_x[predicts == 0][:, 1], color='blue', label='M')
 ax.scatter(train_x[predicts == 1][:, 0], train_x[predicts == 1][:, 1], color='red', label='F')
-ax.set_ylabel('weight')
-ax.set_xlabel('height')
+ax.set_ylabel('height')
+ax.set_xlabel('weight')
 ax.set_title('Обучающая выборка')
 ax.pcolormesh(xx1, xx2, pred_y.reshape(xx1.shape), cmap=ListedColormap(['blue', 'red']), alpha=0.5, shading='auto')
+ax.set_xlim(40, 110)
+ax.set_ylim(150, 190)
 ax.legend()
 
 
 x1_min, x1_max = test_x[:, 0].min() - 0.5, test_x[:, 1].max()+0.5
 x2_min, x2_max = test_x[:, 0].min() - 0.5, test_x[:, 1].max()+0.5
 
-xx1, xx2 = np.mgrid[x1_min:x1_max:50j, x2_min:x2_max:50j]
+xx1, xx2 = np.mgrid[x1_min:x1_max:150j, x2_min:x2_max:150j]
 pred_x = np.column_stack([xx1.reshape(-1), xx2.reshape(-1)])
 pred_y = classifier.predict(pred_x)
 
@@ -158,10 +160,12 @@ ax = figure.add_subplot(2, 2, 2)
 predicts = classifier.predict(test_x)
 ax.scatter(test_x[predicts == 0][:, 0], test_x[predicts == 0][:, 1], color='blue', label='M')
 ax.scatter(test_x[predicts == 1][:, 0], test_x[predicts == 1][:, 1], color='red', label='F')
-ax.set_ylabel('weight')
-ax.set_xlabel('height')
+ax.set_ylabel('height')
+ax.set_xlabel('weight')
 ax.set_title('Тестовая выборка')
 ax.pcolormesh(xx1, xx2, pred_y.reshape(xx1.shape), cmap=ListedColormap(['blue', 'red']), alpha=0.5, shading='auto')
+ax.set_xlim(40,110)
+ax.set_ylim(150, 190)
 ax.legend()
 plt.show()
 
