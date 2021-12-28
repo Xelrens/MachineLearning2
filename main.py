@@ -31,6 +31,10 @@ validation_ds["average_bedrooms"] = validation_ds["total_bedrooms"] / validation
 test_ds["average_rooms"] = test_ds["total_rooms"] / test_ds["households"]
 test_ds["average_bedrooms"] = test_ds["total_bedrooms"] / test_ds["households"]
 
+train_ds = train_ds.drop(['total_rooms','total_bedrooms'], axis=1)
+validation_ds = validation_ds.drop(['total_rooms','total_bedrooms'], axis=1)
+test_ds = test_ds.drop(['total_rooms','total_bedrooms'], axis=1)
+
 
 ''' 4) В признаке average_bedrooms (total_bedrooms) есть отсутствующие значения.
 Определите число экземпляров данных, для которых этот признак отсутствует.
