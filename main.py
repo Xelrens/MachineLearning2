@@ -7,6 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error
 from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import StandardScaler
 
 # Часть 1
 # Задание 3
@@ -36,24 +37,24 @@ test_ds["average_bedrooms"] = test_ds["total_bedrooms"] / test_ds["households"]
 Придумайте и обоснуйте стратегию заполнения пропусков в этой задаче. Заполните пропуски.
 Заполняем средним количеством комнат. Таким образом количество комнат будет близко к вероятному.'''
 
-test_ds['average_bedrooms'].fillna(value=test_ds['average_bedrooms'].mean(), inplace=True)
-train_ds['average_bedrooms'].fillna(value=train_ds['average_bedrooms'].mean(), inplace=True)
-validation_ds['average_bedrooms'].fillna(value=validation_ds['average_bedrooms'].mean(), inplace=True)
+
+print("Количество отсутствующих значений до заполнения:", data_set.isna().sum(), '\r\n')
+
+mean_value = train_ds["average_bedrooms"].mean()
+train_ds.fillna(value = mean_value, inplace=True)
+test_ds.fillna(value = mean_value, inplace = True)
+validation_ds.fillna(value = mean_value, inplace=True)
+
+print("Количество отсутствующих значений после заполнения\n", train_ds.isna().sum(), validation_ds.isna().sum(), test_ds.isna().sum())
 
 # 5) Нормализуйте признаки longitude и latitude
 #   (сделайте так, чтобы каждый признак имел среднее значение 0 и дисперсию 1 внутри обучающей выборки)
+Scaler = StandardScaler()
+train_ds.loc[:, 'longitude':'latitude'] = Scaler.fit_transform(train_ds.loc[:, 'longitude':'latitude'].to_numpy())
+test_ds.loc[:, 'longitude':'latitude'] = Scaler.transform(test_ds.loc[:, 'longitude':'latitude'].to_numpy())
+validation_ds.loc[:, 'longitude':'latitude'] = Scaler.transform(validation_ds.loc[:, 'longitude':'latitude'].to_numpy())
 
-
-train_ds["longitude"] = (train_ds["longitude"] - train_ds["longitude"].mean()) / train_ds["longitude"].std()
-train_ds["latitude"] = (train_ds["latitude"] - train_ds["latitude"].mean()) / train_ds["latitude"].std()
-
-validation_ds["longitude"] = (validation_ds["longitude"] - validation_ds["longitude"].mean()) / validation_ds["longitude"].std()
-validation_ds["latitude"] = (validation_ds["latitude"] - validation_ds["latitude"].mean()) / validation_ds["latitude"].std()
-
-test_ds["longitude"] = (test_ds["longitude"] - test_ds["longitude"].mean()) / test_ds["longitude"].std()
-test_ds["latitude"] = (test_ds["latitude"] - test_ds["latitude"].mean()) / test_ds["latitude"].std()
-
-
+print("Нормализация признаков longitude и latitude\n", train_ds, test_ds, validation_ds)
 # Часть 2
 # Задание 1
 # Для датасета Davis:
@@ -144,8 +145,8 @@ x1_min, x1_max = test_x[:, 0].min() - 0.5, test_x[:, 1].max()+0.5
 x2_min, x2_max = test_x[:, 0].min() - 0.5, test_x[:, 1].max()+0.5
 
 xx1, xx2 = np.mgrid[x1_min:x1_max:50j, x2_min:x2_max:50j]
-X_pred = np.column_stack([xx1.reshape(-1), xx2.reshape(-1)])
-y_pred = classifier.predict(X_pred)
+pred_x = np.column_stack([xx1.reshape(-1), xx2.reshape(-1)])
+pred_y = classifier.predict(pred_x)
 
 
 ax = figure.add_subplot(2, 2, 2)
